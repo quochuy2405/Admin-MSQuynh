@@ -44,13 +44,12 @@ const Home: NextPage = (): JSX.Element => {
   return (
     <>
       <Metadata title="Trang chủ - Learning Code" description="Trang chủ - Learning Code" />
-
+      <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          Lỗi đăng nhập
+        </Alert>
+      </Snackbar>
       <Container fixed className={Styles.container}>
-        <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-            Lỗi đăng nhập
-          </Alert>
-        </Snackbar>
         <p className={Styles.title}>Ô mai gút chào mừng đến với MS.Quynh</p>
         <div className={Styles.formLogin}>
           <p className={Styles.titleLogin}>Đăng nhập</p>
