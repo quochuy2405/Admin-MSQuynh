@@ -49,7 +49,7 @@ const Home: NextPage = (): JSX.Element => {
           Lỗi đăng nhập
         </Alert>
       </Snackbar>
-      <Container fixed className={Styles.container}>
+      <div className={Styles.container}>
         <p className={Styles.title}>Ô mai gút chào mừng đến với MS.Quynh</p>
         <div className={Styles.formLogin}>
           <p className={Styles.titleLogin}>Đăng nhập</p>
@@ -71,7 +71,7 @@ const Home: NextPage = (): JSX.Element => {
           </Button>
           <p className={Styles.copyRight}>© 2022HuyPui</p>
         </div>
-      </Container>
+      </div>
     </>
   )
 }
