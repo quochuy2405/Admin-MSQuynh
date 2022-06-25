@@ -1,0 +1,8 @@
+@use 'abstracts/variables' as *;
+@use 'base/reset' as *;
+@use 'base/typography' as *;
+
+body {
+  color: var(--color-text-default);
+  background-color: var(--color-page-background);
+}

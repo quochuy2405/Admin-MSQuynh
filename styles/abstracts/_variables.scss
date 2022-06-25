@@ -1,0 +1,23 @@
+:root {
+  --font-sans: 'Open Sans', 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, ui-sans-serif, sans-serif;
+  --font-mono: 'Cascadia Code', 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', ui-monospace, monospace;
+}
+
+/*
+ *  Color variables 
+ */
+
+:root {
+  --color-page-background: #ffffff;
+
+  // Text
+  --color-text-default: #212121;
+  --color-base: #d1d1d1;
+}
+
+.dark {
+  --color-page-background: #1d1d1d;
+
+  // Text
+  --color-text-default: #f0f0f0;
+}
