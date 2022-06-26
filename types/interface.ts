@@ -2,10 +2,11 @@ interface Course {
   name: string
   description?: string
   max_vol?: number
-  current_vol?: number
+  current_vol?: string
   class_code: string
   thumbnail?: string
   level: number
+  date_open?: string
 }
 interface Student {
   name: string

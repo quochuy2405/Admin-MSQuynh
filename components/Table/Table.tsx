@@ -63,7 +63,7 @@ export default function BasicTable({ course }: { course: Course }) {
           </TableHead>
           <TableBody style={{ paddingTop: '100px' }}>
             {students.map((row) => (
-              <TableRow key={row?.user_id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableRow key={row?.user_id + row.class_code} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <Tooltip title="Copy">
                   <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row.class_code.toString())}>
                     {row.class_code}
@@ -89,7 +89,7 @@ export default function BasicTable({ course }: { course: Course }) {
                     {row.birth_day}
                   </TableCell>
                 </Tooltip>
-                <Tooltip title="Delete">
+                <Tooltip title="Copy">
                   <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row?.email)}>
                     <p className={Styles.textOver}>{row?.email}</p>
                   </TableCell>

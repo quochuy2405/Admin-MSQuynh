@@ -1,0 +1,45 @@
+.createCourse {
+  width: 50%;
+  height: fit-content;
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.overScroll {
+  width: 100%;
+  height: 100vh;
+  overflow: scroll;
+  padding: 15px 10px;
+}
+.titleCreateCourse {
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.textDescription {
+  outline: none;
+  border: 1px solid rgb(199, 199, 199);
+  border-radius: 4px;
+  padding: 10px;
+}
+.imageCover {
+  width: 100%;
+  height: 300px;
+  border: 1px solid rgb(199, 199, 199);
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+.btnImageCover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+}

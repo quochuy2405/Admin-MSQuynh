@@ -2,9 +2,11 @@
 // import { Student } from '@/types/interface'
 import type { Course, loginUser, Student } from '@/types/interface'
 import { initializeApp } from 'firebase/app'
-import type { FirestoreDataConverter, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore/lite'
-import { doc, collection, getDocs, getFirestore, setDoc, query, where } from 'firebase/firestore/lite'
-import { GoogleAuthProvider, getAuth, signInWithPopup, FacebookAuthProvider, signOut } from 'firebase/auth'
+import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth'
+import type { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { doc, setDoc } from 'firebase/firestore/lite'
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore/lite'
+import { getStorage, ref, uploadBytes } from 'firebase/storage'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,6 +29,7 @@ const firebaseConfig = {
 }
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
+const storage = getStorage()
 const db = getFirestore(app)
 
 // Get a list of courses from your database
@@ -65,6 +68,7 @@ const studentConverter: FirestoreDataConverter<Student> = {
     return docSnap.data() as Student
   }
 }
+// get Student by class code
 const getStudentsByClassCode = async (classCode: string) => {
   try {
     if (classCode) {
@@ -81,5 +85,36 @@ const getStudentsByClassCode = async (classCode: string) => {
     return []
   }
 }
+// upload and store image
+const uploadImage = async (image: any) => {
+  if (image) {
+    const UploadTask = ref(storage, `imageProducts/${image.name}`)
+    return await uploadBytes(UploadTask, image).then((snapshot) => {
+      return snapshot.metadata.fullPath
+    })
+  }
+}
+const autoGenerateId = () => {
+  return 'QH' + Date.now()
+}
+// create courses
+const createCourse = async (course: Course) => {
+  try {
+    if (!course) {
+      return false
+    }
+    const queryCheckcourse = query(collection(db, 'courses'), where('class_code', '==', course.class_code))
+    const courseIsExit = await getDocs(queryCheckcourse)
+    if (!courseIsExit.size) {
+      const cityRef = doc(db, 'courses', course.class_code + autoGenerateId())
+      await setDoc(cityRef, course)
+      return true
+    } else {
+      return null
+    }
+  } catch (e) {
+    return false
+  }
+}
 
-export { getCourses, getUser, getStudentsByClassCode }
+export { getCourses, getUser, getStudentsByClassCode, uploadImage, createCourse }
