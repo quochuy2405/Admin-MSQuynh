@@ -1,0 +1,24 @@
+.btnRegister {
+  background-color: var(--color-base);
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(to right, var(--color-base) 50%, white 0%) left;
+  background-color: var(--color-base);
+  background-size: 200%;
+  transition: all linear 0.2s;
+  &:hover {
+    background-position: 100%;
+    transition: all linear 0.2s;
+    color: black;
+    transform: scale(0.98);
+    box-shadow: 0 0 0 2px var(--color-base);
+  }
+}

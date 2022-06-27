@@ -1,15 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button, IconButton, Input, TextareaAutosize, TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { IoCameraSharp } from 'react-icons/io5'
 import Styles from '@/components/CreateCourse/CreateCourse.module.scss'
-import Image from 'next/image'
 import { createCourse, uploadImage } from '@/firebase'
 import type { Course } from '@/types/interface'
+import { DesktopDatePicker } from '@mui/lab'
+import { Button, IconButton, TextareaAutosize, TextField } from '@mui/material'
 import { useSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
+import { IoCameraSharp } from 'react-icons/io5'
 
 function CreateCourse(): JSX.Element {
   const [fileImage, setFileImage] = useState<any>()
+  const [date, setDate] = useState<Date>(new Date(Date.now()))
   const { enqueueSnackbar } = useSnackbar()
   const [course, setCourse] = useState<Course>({
     name: '',
@@ -30,7 +31,8 @@ function CreateCourse(): JSX.Element {
         const fileType = file['type']
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png']
         if (!validImageTypes.includes(fileType)) {
-          console.log('sai định dạng')
+          enqueueSnackbar('Sai định dạng', { variant: 'error' })
+
           setFileImage(undefined)
         } else {
           if (file) {
@@ -46,10 +48,14 @@ function CreateCourse(): JSX.Element {
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setCourse({ ...course, [event.target.name]: event.target.value })
   }
+  const onChangeInputDate = (value: Date | null) => {
+    if (value) setDate(value)
+  }
   const submitFrom = async () => {
-    if (course.class_code && course.date_open && course.date_open && course.level && course.thumbnail && course.max_vol) {
+    if (course.class_code && date && course.level && course.thumbnail && course.max_vol) {
       const isUpload = await uploadImage(fileImage)
       if (isUpload) {
+        course.date_open = `${date?.getDay()}/${date?.getMonth() + 1}/${date?.getFullYear()}`
         const isCreate = await createCourse(course)
         if (isCreate) {
           enqueueSnackbar('Tạo khóa học thành công', { variant: 'success' })
@@ -65,11 +71,11 @@ function CreateCourse(): JSX.Element {
   }
   useEffect(() => {
     if (fileImage) setCourse({ ...course, thumbnail: fileImage?.name })
-  }, [fileImage])
+  }, [fileImage, course])
 
   return (
     <>
-      <p className={Styles.titleCreateCourse}>Tạo khóa học</p>
+      <h1 className={Styles.titleCreateCourse}>Tạo khóa học</h1>
       <div className={Styles.overScroll}>
         <div className={Styles.createCourse}>
           <TextField
@@ -82,16 +88,27 @@ function CreateCourse(): JSX.Element {
             onChange={(e) => onChangeInput(e)}
           />
           <TextField value={course.name} required name="name" label="Tên lớp" variant="outlined" fullWidth onChange={(e) => onChangeInput(e)} />
-          <TextField value={course.level} required name="level" label="Lớp" variant="outlined" fullWidth onChange={(e) => onChangeInput(e)} />
           <TextField
-            value={course.date_open}
-            name="date_open"
-            label="Thời gian khai giảng"
+            type={'number'}
+            value={course.level}
+            required
+            name="level"
+            aria-valuemax={12}
             variant="outlined"
             fullWidth
             onChange={(e) => onChangeInput(e)}
           />
+
+          <DesktopDatePicker
+            label="Ngày khai giảng"
+            inputFormat="dd/MM/yyyy"
+            value={date}
+            minDate={new Date(Date.now())}
+            onChange={(e) => onChangeInputDate(e)}
+            renderInput={(params) => <TextField fullWidth name="date_open" {...params} />}
+          />
           <TextField
+            type={'number'}
             value={course.max_vol}
             required
             name="max_vol"

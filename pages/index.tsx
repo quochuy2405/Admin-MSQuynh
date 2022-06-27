@@ -1,12 +1,12 @@
 import { Metadata } from '@/components'
-import { getUser } from '@/firebase'
+import { checkIdUser, getUser } from '@/firebase'
 import Styles from '@/styles/pages/index.module.scss'
 import type { loginUser } from '@/types/interface'
 import type { NextPage } from '@/types/next'
 import type { SnackbarOrigin } from '@mui/material'
 import { Alert, Button, Container, Snackbar, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 interface State extends SnackbarOrigin {
   open: boolean
@@ -32,12 +32,24 @@ const Home: NextPage = (): JSX.Element => {
   const onLogin = async () => {
     const idUser = await getUser(user)
     if (idUser) {
-      window.localStorage.setItem('idUser', idUser)
+      window.localStorage.setItem('idUser', 'quochuy2001' + idUser)
       router.push('/admin')
     } else {
       setState({ ...state, open: true })
     }
   }
+
+  useEffect(() => {
+    const fetch = async () => {
+      const id = window.localStorage.getItem('idUser') || ''
+
+      if (id.startsWith('quochuy2001')) {
+        router.push('/admin')
+      }
+    }
+    fetch()
+  }, [])
+
   const handleClose = () => {
     setState({ ...state, open: false })
   }

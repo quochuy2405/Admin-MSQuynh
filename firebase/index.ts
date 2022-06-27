@@ -50,6 +50,16 @@ const getCourses = async () => {
   }, [])
   return listCourses
 }
+// checkIdUser
+const checkIdUser = async (id: string) => {
+  const queryCheckUser = query(collection(db, 'accounts'), where('user_id', '==', id))
+  const studentIsExit = await getDocs(queryCheckUser)
+  if (studentIsExit.size) {
+    return studentIsExit.docs[0].id
+  }
+  return null
+}
+// G
 // Get a list of users from your database
 const getUser = async (user: loginUser) => {
   const queryCheckUser = query(collection(db, 'accounts'), where('username', '==', user.username), where('password', '==', user.password))
@@ -117,4 +127,4 @@ const createCourse = async (course: Course) => {
   }
 }
 
-export { getCourses, getUser, getStudentsByClassCode, uploadImage, createCourse }
+export { getCourses, getUser, getStudentsByClassCode, uploadImage, createCourse, checkIdUser, storage }

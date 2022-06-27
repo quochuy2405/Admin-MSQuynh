@@ -6,9 +6,23 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { MdDelete } from 'react-icons/md'
+import { BsCheck2Circle } from 'react-icons/bs'
+import { RiCloseCircleLine } from 'react-icons/ri'
 import { getStudentsByClassCode } from '@/firebase'
 import type { Course, Student } from '@/types/interface'
-import { Alert, Box, Button, Snackbar, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip } from '@mui/material'
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  Snackbar,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  Tooltip
+} from '@mui/material'
 import { useEffect, useState } from 'react'
 import { TbTableExport } from 'react-icons/tb'
 import Styles from '@/styles/pages/admin.module.scss'
@@ -16,8 +30,9 @@ import Styles from '@/styles/pages/admin.module.scss'
 const actions = [{ icon: <TbTableExport />, name: 'Print' }]
 export default function BasicTable({ course }: { course: Course }) {
   const [students, setStudents] = useState<Array<Student>>([])
+  const [studentFillter, setStudentFillter] = useState<Array<Student>>([])
   const [open, setOpen] = useState(false)
-
+  const [filter, setFilter] = useState(0)
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return
@@ -30,8 +45,29 @@ export default function BasicTable({ course }: { course: Course }) {
       setStudents(listStudent)
     }
     fetch()
-  }, [course?.class_code])
+  }, [course?.class_code, filter])
+  useEffect(() => {
+    switch (filter) {
+      case 0: {
+        setStudentFillter(students)
+        break
+      }
+      case 1: {
+        const list = students.filter((item) => item?.status == 0)
+        setStudentFillter(list)
 
+        break
+      }
+      case 2: {
+        const list = students.filter((item) => item?.status == 1)
+        setStudentFillter(list)
+        break
+      }
+      default: {
+        setStudentFillter(students)
+      }
+    }
+  }, [filter, students])
   //copy To Clipboard
   function copyToClipboard(text: string) {
     /* Copy the text inside the text field */
@@ -46,6 +82,21 @@ export default function BasicTable({ course }: { course: Course }) {
         </Alert>
       </Snackbar>
       <b>Số lượng học sinh: 2/30</b>
+      <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '20px' }}>
+        <b>Hiển thị:</b>
+        <FormControlLabel onClick={() => setFilter(1)} control={<Checkbox checked={filter === 1} />} label="Đang chờ" />
+        <FormControlLabel onClick={() => setFilter(2)} control={<Checkbox checked={filter === 2} />} label="Đã xác nhận" />
+
+        <FormControlLabel
+          onClick={() => setFilter(0)}
+          control={
+            <IconButton style={{ color: '#ff2828e0' }} aria-label="delete" size="small">
+              <RiCloseCircleLine size={20} />
+            </IconButton>
+          }
+          label="Bỏ lọc"
+        />
+      </div>
       <TableContainer style={{ height: '100vh' }} component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead style={{ position: 'sticky', backgroundColor: 'white', top: '0' }}>
@@ -62,7 +113,7 @@ export default function BasicTable({ course }: { course: Course }) {
             </TableRow>
           </TableHead>
           <TableBody style={{ paddingTop: '100px' }}>
-            {students.map((row) => (
+            {studentFillter.map((row) => (
               <TableRow key={row?.user_id + row.class_code} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <Tooltip title="Copy">
                   <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row.class_code.toString())}>
@@ -98,12 +149,12 @@ export default function BasicTable({ course }: { course: Course }) {
                   <p className={Styles.textOver}>{`${new Date(Date.now())}`}</p>
                 </TableCell>
                 <TableCell>
-                  <Button variant="outlined" startIcon={<MdDelete />}>
+                  <Button disabled={row.status > 0} color="success" variant="outlined" startIcon={<BsCheck2Circle />}>
                     Xác nhận
                   </Button>
                 </TableCell>
                 <TableCell>
-                  <Button variant="outlined" startIcon={<MdDelete />}>
+                  <Button color="error" variant="outlined" startIcon={<MdDelete />}>
                     Hủy đăng ký
                   </Button>
                 </TableCell>

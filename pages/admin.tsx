@@ -1,4 +1,5 @@
 import { CreateCourse, Metadata, Table } from '@/components'
+import ManagerCourse from '@/components/ManagerCourse/ManagerCourse'
 import { getCourses } from '@/firebase'
 import Styles from '@/styles/pages/admin.module.scss'
 import type { Course } from '@/types/interface'
@@ -43,12 +44,13 @@ const Admin: NextPage = (): JSX.Element => {
         break
       }
       case 2: {
+        setBody(<ManagerCourse />)
         break
       }
       case 3: {
         setBody(
           <>
-            <p>Danh sách lớp</p>
+            <h1 className={Styles.title}>Danh sách lớp</h1>
             {classCurrent && <Table course={classCurrent} />}
           </>
         )
@@ -57,7 +59,7 @@ const Admin: NextPage = (): JSX.Element => {
       default: {
         setBody(
           <>
-            <p>Danh sách lớp</p>
+            <h1 className={Styles.title}>Danh sách lớp</h1>
             {classCurrent && <Table course={classCurrent} />}
           </>
         )
@@ -81,7 +83,7 @@ const Admin: NextPage = (): JSX.Element => {
           sx={{ height: 500, flexGrow: 1, overflowY: 'auto' }}
         >
           <TreeItem nodeId="0_danhsach" label="Tổng quan">
-            <TreeItem nodeId="2_cho" label="Danh sách chờ" onClick={() => setTab(2)} />
+            <TreeItem nodeId="2_cho" label="Quản lý khóa học" onClick={() => setTab(2)} />
             <TreeItem nodeId="1_khoahoc" label="Tạo khóa học" onClick={() => setTab(1)} />
           </TreeItem>
           {listLevel?.map((level) => (

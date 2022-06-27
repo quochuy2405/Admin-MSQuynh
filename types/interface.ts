@@ -6,7 +6,7 @@ interface Course {
   class_code: string
   thumbnail?: string
   level: number
-  date_open?: string
+  date_open: string
 }
 interface Student {
   name: string
@@ -15,6 +15,7 @@ interface Student {
   class_code: string
   email: string
   user_id: string
+  status: number
 }
 interface loginUser {
   username: string
