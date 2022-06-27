@@ -48,6 +48,7 @@ export default function BasicTable({ course }: { course: Course }) {
   useEffect(() => {
     const fetch = async () => {
       const listStudent = await getStudentsByClassCode(course?.class_code)
+
       setStudents(listStudent)
     }
     fetch()
@@ -60,13 +61,13 @@ export default function BasicTable({ course }: { course: Course }) {
         break
       }
       case 1: {
-        const list = students.filter((item) => item?.status == 0)
+        const list = students?.filter((item) => item?.status == 0)
         setStudentFillter(list)
 
         break
       }
       case 2: {
-        const list = students.filter((item) => item?.status == 1)
+        const list = students?.filter((item) => item?.status == 1)
         setStudentFillter(list)
         break
       }
@@ -118,7 +119,7 @@ export default function BasicTable({ course }: { course: Course }) {
       </div>
       <TableContainer style={{ height: '100vh' }} component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead style={{ position: 'sticky', backgroundColor: 'white', top: '0' }}>
+          <TableHead style={{ position: 'sticky', backgroundColor: 'white', top: '0', zIndex: '99' }}>
             <TableRow>
               <TableCell>Mã lớp</TableCell>
               <TableCell>Lớp</TableCell>
@@ -132,8 +133,8 @@ export default function BasicTable({ course }: { course: Course }) {
             </TableRow>
           </TableHead>
           <TableBody style={{ paddingTop: '100px' }}>
-            {studentFillter.map((student) => (
-              <TableRow key={student?.user_id + student?.class_code} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            {studentFillter?.map((student) => (
+              <TableRow key={student?.class_code + student?.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <Tooltip title={`Copy: ${student?.class_code}`}>
                   <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.class_code.toString())}>
                     {student?.class_code}
@@ -154,9 +155,9 @@ export default function BasicTable({ course }: { course: Course }) {
                     {student?.phone_number}
                   </TableCell>
                 </Tooltip>
-                <Tooltip title={`Copy: ${student?.birth_day}`}>
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.birth_day)}>
-                    {student?.birth_day}
+                <Tooltip title={`Copy: ${student?.birth_day.toString()}`}>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.birth_day.toString())}>
+                    <p className={Styles.textOver}> {student?.birth_day.toString()}</p>
                   </TableCell>
                 </Tooltip>
                 <Tooltip title={`Copy: ${student?.email}`}>
@@ -170,11 +171,11 @@ export default function BasicTable({ course }: { course: Course }) {
                   </TableCell>
                 </Tooltip>
                 <TableCell>
-                  {!student.status ? (
+                  {!student?.status ? (
                     <Button
                       onClick={() => onChangeStatus(student, 1)}
-                      disableFocusRipple={student.status > 0}
-                      disabled={student.status > 0}
+                      disableFocusRipple={student?.status > 0}
+                      disabled={student?.status > 0}
                       color="success"
                       variant="outlined"
                       startIcon={<BsCheck2Circle />}
@@ -184,7 +185,7 @@ export default function BasicTable({ course }: { course: Course }) {
                   ) : (
                     <Button
                       onClick={() => onChangeStatus(student, 0)}
-                      disabled={student.status == 0}
+                      disabled={student?.status == 0}
                       color="warning"
                       variant="outlined"
                       startIcon={<BsCheck2Circle />}
@@ -206,7 +207,7 @@ export default function BasicTable({ course }: { course: Course }) {
       <Box sx={{ position: 'absolute', transform: 'translateZ(10px)', flexGrow: 1, bottom: 50, right: 50 }}>
         <SpeedDial ariaLabel="SpeedDial basic example" sx={{ position: 'absolute', bottom: 16, right: 0 }} icon={<SpeedDialIcon />}>
           {actions.map((action) => (
-            <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} />
+            <SpeedDialAction key={action?.name} icon={action?.icon} tooltipTitle={action?.name} />
           ))}
         </SpeedDial>
       </Box>

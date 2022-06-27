@@ -88,11 +88,11 @@ const Admin: NextPage = (): JSX.Element => {
               {listClass?.map(
                 (classItem) =>
                   classItem &&
-                  level == classItem.level.toString() && (
+                  level == classItem?.level.toString() && (
                     <TreeItem
-                      key={classItem.class_code + classItem.name}
-                      nodeId={`${level + classItem.class_code}`}
-                      label={classItem.class_code}
+                      key={classItem?.class_code + classItem?.name}
+                      nodeId={`${level + classItem?.class_code}`}
+                      label={classItem?.class_code}
                       onClick={() => onSetClassCode(classItem)}
                     />
                   )

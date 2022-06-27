@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 // import { Student } from '@/types/interface'
 import type { Course, loginUser, Student } from '@/types/interface'
+import { tr } from 'date-fns/locale'
 import { initializeApp } from 'firebase/app'
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth'
 import type { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot } from 'firebase/firestore/lite'
@@ -53,22 +54,30 @@ const getCourses = async () => {
 }
 // checkIdUser
 const checkIdUser = async (id: string) => {
-  const queryCheckUser = query(collection(db, 'accounts'), where('user_id', '==', id))
-  const studentIsExit = await getDocs(queryCheckUser)
-  if (studentIsExit.size) {
-    return studentIsExit.docs[0].id
+  try {
+    const queryCheckUser = query(collection(db, 'accounts'), where('user_id', '==', id))
+    const studentIsExit = await getDocs(queryCheckUser)
+    if (studentIsExit.size) {
+      return studentIsExit.docs[0].id
+    }
+    return null
+  } catch (error) {
+    return null
   }
-  return null
 }
 // G
 // Get a list of users from your database
 const getUser = async (user: loginUser) => {
-  const queryCheckUser = query(collection(db, 'accounts'), where('username', '==', user.username), where('password', '==', user.password))
-  const studentIsExit = await getDocs(queryCheckUser)
-  if (studentIsExit.size) {
-    return studentIsExit.docs[0].id
+  try {
+    const queryCheckUser = query(collection(db, 'accounts'), where('username', '==', user.username), where('password', '==', user.password))
+    const studentIsExit = await getDocs(queryCheckUser)
+    if (studentIsExit.size) {
+      return studentIsExit.docs[0].id
+    }
+    return null
+  } catch (error) {
+    return null
   }
-  return null
 }
 // Get a list student by class code  from your database
 const studentConverter: FirestoreDataConverter<Student> = {
@@ -130,7 +139,12 @@ const createCourse = async (course: Course) => {
 }
 const updateStatusRegisterById = async (student: Student, value: number) => {
   try {
-    const queryCheckUser = query(collection(db, 'students'), where('user_id', '==', student.user_id), where('class_code', '==', student.class_code))
+    const queryCheckUser = query(
+      collection(db, 'students'),
+      where('user_id', '==', student.user_id),
+      where('class_code', '==', student.class_code),
+      where('name', '==', student.name)
+    )
     const studentOld = await getDocs(queryCheckUser)
     if (studentOld.docs[0].id) {
       const studentRef = doc(db, 'students', `${studentOld.docs[0].id}`)
