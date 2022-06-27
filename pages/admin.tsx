@@ -57,12 +57,7 @@ const Admin: NextPage = (): JSX.Element => {
         break
       }
       default: {
-        setBody(
-          <>
-            <h1 className={Styles.title}>Danh sách lớp</h1>
-            {classCurrent && <Table course={classCurrent} />}
-          </>
-        )
+        setBody(<ManagerCourse />)
       }
     }
   }, [tab, classCurrent])
