@@ -16,6 +16,7 @@ interface Student {
   email: string
   user_id: string
   status: number
+  created_date: string
 }
 interface loginUser {
   username: string

@@ -6,12 +6,12 @@ import { useContext } from 'react'
 import Course from './Course'
 import Styles from './ListCourse.module.scss'
 
-interface Courses {
+interface ListCourses {
   size?: number
   list?: Array<TCourse>
 }
 
-function ListCourse({ size, list }: Courses): JSX.Element {
+function ListCourse({ size, list }: ListCourses): JSX.Element {
   const { loadingCourse } = useContext(AppCtx)
   return (
     <div className={Styles.listCourse}>

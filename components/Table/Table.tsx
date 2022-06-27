@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow'
 import { MdDelete } from 'react-icons/md'
 import { BsCheck2Circle } from 'react-icons/bs'
 import { RiCloseCircleLine } from 'react-icons/ri'
-import { getStudentsByClassCode } from '@/firebase'
+import { getStudentsByClassCode, updateStatusRegisterById } from '@/firebase'
 import type { Course, Student } from '@/types/interface'
 import {
   Alert,
@@ -23,29 +23,36 @@ import {
   SpeedDialIcon,
   Tooltip
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { TbTableExport } from 'react-icons/tb'
 import Styles from '@/styles/pages/admin.module.scss'
+import { useSnackbar } from 'notistack'
+import { AppCtx } from '@/Context/GlobalContext'
 
 const actions = [{ icon: <TbTableExport />, name: 'Print' }]
 export default function BasicTable({ course }: { course: Course }) {
   const [students, setStudents] = useState<Array<Student>>([])
   const [studentFillter, setStudentFillter] = useState<Array<Student>>([])
   const [open, setOpen] = useState(false)
+  const { refresh, setRefresh } = useContext(AppCtx)
+  const { enqueueSnackbar } = useSnackbar()
   const [filter, setFilter] = useState(0)
+  // handle Close snackbar
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return
     }
     setOpen(false)
   }
+  // get Students By ClassCode
   useEffect(() => {
     const fetch = async () => {
       const listStudent = await getStudentsByClassCode(course?.class_code)
       setStudents(listStudent)
     }
     fetch()
-  }, [course?.class_code, filter])
+  }, [course?.class_code, filter, refresh])
+  // switch filter
   useEffect(() => {
     switch (filter) {
       case 0: {
@@ -73,6 +80,18 @@ export default function BasicTable({ course }: { course: Course }) {
     /* Copy the text inside the text field */
     navigator.clipboard.writeText(text)
     setOpen(true)
+  }
+  // accept  student by update status code
+  const onChangeStatus = async (student: Student, value: number) => {
+    const result = await updateStatusRegisterById(student, value)
+
+    if (result) {
+      const message = value ? 'Đã xác nhận thông tin' : 'Đã chuyển đổi trạng thái'
+      enqueueSnackbar(message, { variant: 'success' })
+      setRefresh((e) => !e)
+    } else {
+      enqueueSnackbar('Hú hú có lỗi xảy ra :((', { variant: 'error' })
+    }
   }
   return (
     <>
@@ -113,49 +132,70 @@ export default function BasicTable({ course }: { course: Course }) {
             </TableRow>
           </TableHead>
           <TableBody style={{ paddingTop: '100px' }}>
-            {studentFillter.map((row) => (
-              <TableRow key={row?.user_id + row.class_code} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <Tooltip title="Copy">
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row.class_code.toString())}>
-                    {row.class_code}
+            {studentFillter.map((student) => (
+              <TableRow key={student?.user_id + student?.class_code} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <Tooltip title={`Copy: ${student?.class_code}`}>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.class_code.toString())}>
+                    {student?.class_code}
                   </TableCell>
                 </Tooltip>
-                <Tooltip title="Copy">
+                <Tooltip title={`Copy: ${course?.name}`}>
                   <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(course?.name)}>
-                    {course?.name}
+                    <p className={Styles.textOver}>{course?.name}</p>
                   </TableCell>
                 </Tooltip>
-                <Tooltip title="Copy">
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row?.name)}>
-                    {row?.name}
+                <Tooltip title={`Copy: ${course?.name}`}>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.name)}>
+                    {student?.name}
                   </TableCell>
                 </Tooltip>
-                <Tooltip title="Copy">
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row?.phone_number)}>
-                    {row?.phone_number}
+                <Tooltip title={`Copy: ${student?.phone_number}`}>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.phone_number)}>
+                    {student?.phone_number}
                   </TableCell>
                 </Tooltip>
-                <Tooltip title="Copy">
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row.birth_day)}>
-                    {row.birth_day}
+                <Tooltip title={`Copy: ${student?.birth_day}`}>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.birth_day)}>
+                    {student?.birth_day}
                   </TableCell>
                 </Tooltip>
-                <Tooltip title="Copy">
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(row?.email)}>
-                    <p className={Styles.textOver}>{row?.email}</p>
+                <Tooltip title={`Copy: ${student?.email}`}>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.email)}>
+                    <p className={Styles.textOver}>{student?.email}</p>
+                  </TableCell>
+                </Tooltip>
+                <Tooltip title={`Copy: ${student?.created_date}`}>
+                  <TableCell>
+                    <p className={Styles.textOver}>{student?.created_date}</p>
                   </TableCell>
                 </Tooltip>
                 <TableCell>
-                  <p className={Styles.textOver}>{`${new Date(Date.now())}`}</p>
-                </TableCell>
-                <TableCell>
-                  <Button disabled={row.status > 0} color="success" variant="outlined" startIcon={<BsCheck2Circle />}>
-                    Xác nhận
-                  </Button>
+                  {!student.status ? (
+                    <Button
+                      onClick={() => onChangeStatus(student, 1)}
+                      disableFocusRipple={student.status > 0}
+                      disabled={student.status > 0}
+                      color="success"
+                      variant="outlined"
+                      startIcon={<BsCheck2Circle />}
+                    >
+                      Xác nhận
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => onChangeStatus(student, 0)}
+                      disabled={student.status == 0}
+                      color="warning"
+                      variant="outlined"
+                      startIcon={<BsCheck2Circle />}
+                    >
+                      Hoàn tác
+                    </Button>
+                  )}
                 </TableCell>
                 <TableCell>
                   <Button color="error" variant="outlined" startIcon={<MdDelete />}>
-                    Hủy đăng ký
+                    Hủy
                   </Button>
                 </TableCell>
               </TableRow>

@@ -1,17 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 import Styles from '@/components/CreateCourse/CreateCourse.module.scss'
+import { AppCtx } from '@/Context/GlobalContext'
 import { createCourse, uploadImage } from '@/firebase'
 import type { Course } from '@/types/interface'
 import { DesktopDatePicker } from '@mui/lab'
 import { Button, IconButton, TextareaAutosize, TextField } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { IoCameraSharp } from 'react-icons/io5'
 
 function CreateCourse(): JSX.Element {
   const [fileImage, setFileImage] = useState<any>()
   const [date, setDate] = useState<Date>(new Date(Date.now()))
   const { enqueueSnackbar } = useSnackbar()
+  const { setRefresh } = useContext(AppCtx)
   const [course, setCourse] = useState<Course>({
     name: '',
     class_code: '',
@@ -59,6 +61,7 @@ function CreateCourse(): JSX.Element {
         const isCreate = await createCourse(course)
         if (isCreate) {
           enqueueSnackbar('Tạo khóa học thành công', { variant: 'success' })
+          setRefresh((e) => !e)
         } else {
           enqueueSnackbar('Tạo khóa học thất bại', { variant: 'error' })
         }

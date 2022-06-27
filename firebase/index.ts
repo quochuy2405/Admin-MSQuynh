@@ -4,6 +4,7 @@ import type { Course, loginUser, Student } from '@/types/interface'
 import { initializeApp } from 'firebase/app'
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth'
 import type { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { ChildUpdateFields, UpdateData, updateDoc } from 'firebase/firestore/lite'
 import { doc, setDoc } from 'firebase/firestore/lite'
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore/lite'
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
@@ -83,9 +84,10 @@ const getStudentsByClassCode = async (classCode: string) => {
   try {
     if (classCode) {
       const courses = query(collection(db, 'students'), where('class_code', '==', classCode)).withConverter(studentConverter)
-      const citySnapshot = await getDocs(courses)
-      const cityList = citySnapshot.docs.map((doc) => doc.data())
-      const list: Array<Student> = cityList.reduce((list: Array<Student>, itemCurrent) => {
+      const studentSnapshot = await getDocs(courses)
+      const studentList = studentSnapshot.docs.map((doc) => doc.data())
+      const list: Array<Student> = studentList.reduce((list: Array<Student>, itemCurrent) => {
+        console.log()
         return [...list, itemCurrent]
       }, [])
       return list
@@ -96,7 +98,7 @@ const getStudentsByClassCode = async (classCode: string) => {
   }
 }
 // upload and store image
-const uploadImage = async (image: any) => {
+const uploadImage = async (image: File) => {
   if (image) {
     const UploadTask = ref(storage, `imageProducts/${image.name}`)
     return await uploadBytes(UploadTask, image).then((snapshot) => {
@@ -116,8 +118,8 @@ const createCourse = async (course: Course) => {
     const queryCheckcourse = query(collection(db, 'courses'), where('class_code', '==', course.class_code))
     const courseIsExit = await getDocs(queryCheckcourse)
     if (!courseIsExit.size) {
-      const cityRef = doc(db, 'courses', course.class_code + autoGenerateId())
-      await setDoc(cityRef, course)
+      const studentRef = doc(db, 'courses', course.class_code + autoGenerateId())
+      await setDoc(studentRef, course)
       return true
     } else {
       return null
@@ -126,5 +128,21 @@ const createCourse = async (course: Course) => {
     return false
   }
 }
+const updateStatusRegisterById = async (student: Student, value: number) => {
+  try {
+    const queryCheckUser = query(collection(db, 'students'), where('user_id', '==', student.user_id), where('class_code', '==', student.class_code))
+    const studentOld = await getDocs(queryCheckUser)
+    if (studentOld.docs[0].id) {
+      const studentRef = doc(db, 'students', `${studentOld.docs[0].id}`)
+      await updateDoc(studentRef, {
+        status: value
+      })
+      return true
+    }
+    return false
+  } catch (error) {
+    return false
+  }
+}
 
-export { getCourses, getUser, getStudentsByClassCode, uploadImage, createCourse, checkIdUser, storage }
+export { getCourses, getUser, getStudentsByClassCode, uploadImage, createCourse, checkIdUser, storage, updateStatusRegisterById }

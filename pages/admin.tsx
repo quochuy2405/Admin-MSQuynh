@@ -1,5 +1,6 @@
 import { CreateCourse, Metadata, Table } from '@/components'
 import ManagerCourse from '@/components/ManagerCourse/ManagerCourse'
+import { AppCtx } from '@/Context/GlobalContext'
 import { getCourses } from '@/firebase'
 import Styles from '@/styles/pages/admin.module.scss'
 import type { Course } from '@/types/interface'
@@ -7,12 +8,13 @@ import type { NextPage } from '@/types/next'
 import TreeItem from '@mui/lab/TreeItem'
 import TreeView from '@mui/lab/TreeView'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { TbChevronDown, TbChevronRight } from 'react-icons/tb'
 const Admin: NextPage = (): JSX.Element => {
   const router = useRouter()
   const [tab, setTab] = useState<number>()
   const [body, setBody] = useState<React.ReactNode>()
+  const { refresh } = useContext(AppCtx)
   const [listClass, setListClass] = useState<Array<Course>>()
   const [listLevel, setListLevel] = useState<Array<string>>([])
   const [classCurrent, setClassCurrent] = useState<Course>()
@@ -35,7 +37,7 @@ const Admin: NextPage = (): JSX.Element => {
       fetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listClass?.length])
+  }, [listClass?.length, refresh])
   //switch tag
   useEffect(() => {
     switch (tab) {

@@ -11,7 +11,7 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <SnackbarProvider maxSnack={3} autoHideDuration={1000}>
+      <SnackbarProvider maxSnack={3} autoHideDuration={1300}>
         <GlobalContext>
           <ThemeProvider attribute="class" storageKey="theme" value={{ dark: 'dark' }} enableSystem>
             {getLayout(<Component {...pageProps} />)}

@@ -15,10 +15,10 @@ function ManagerCourse() {
       setLoadingCourse(true)
     }
     fetch()
-  }, [listCourse?.length])
+  }, [listCourse?.length, setLoadingCourse])
   return (
     <div>
-      <h1 className={Styles.title}>Quảng lý khóa học</h1>
+      <h1 className={Styles.title}>Quản lý khóa học</h1>
       <ListCourse list={listCourse} />
     </div>
   )
