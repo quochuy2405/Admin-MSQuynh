@@ -22,7 +22,7 @@ function Course(course: TCourse): JSX.Element {
   }, [course])
 
   return (
-    <Card sx={{ minWidth: 345 }}>
+    <Card className={Styles.course}>
       <CardActionArea>
         <CardMedia defaultValue={link} component="img" height="140" image={url || link} alt={course?.name} />
         <CardContent>

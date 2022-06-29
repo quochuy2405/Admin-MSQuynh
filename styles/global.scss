@@ -7,7 +7,8 @@ body {
   background-color: var(--color-page-background);
 }
 *::-webkit-scrollbar {
-  display: none;
+  width: 4px;
+  height: 4px;
 }
 
 *::-webkit-scrollbar-track {
@@ -16,6 +17,6 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(54, 127, 244, 0.608);
+  background-color: rgba(114, 189, 255, 0.882);
   border-radius: 100rem;
 }

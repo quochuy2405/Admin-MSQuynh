@@ -136,32 +136,32 @@ export default function BasicTable({ course }: { course: Course }) {
             {studentFillter?.map((student) => (
               <TableRow key={student?.class_code + student?.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <Tooltip title={`Copy: ${student?.class_code}`}>
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.class_code.toString())}>
+                  <TableCell style={{ cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => copyToClipboard(student?.class_code.toString())}>
                     {student?.class_code}
                   </TableCell>
                 </Tooltip>
                 <Tooltip title={`Copy: ${course?.name}`}>
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(course?.name)}>
+                  <TableCell style={{ cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => copyToClipboard(course?.name)}>
                     <p className={Styles.textOver}>{course?.name}</p>
                   </TableCell>
                 </Tooltip>
-                <Tooltip title={`Copy: ${course?.name}`}>
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.name)}>
+                <Tooltip title={`Copy: ${student?.name}`}>
+                  <TableCell style={{ cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => copyToClipboard(student?.name)}>
                     {student?.name}
                   </TableCell>
                 </Tooltip>
                 <Tooltip title={`Copy: ${student?.phone_number}`}>
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.phone_number)}>
+                  <TableCell style={{ cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => copyToClipboard(student?.phone_number)}>
                     {student?.phone_number}
                   </TableCell>
                 </Tooltip>
                 <Tooltip title={`Copy: ${student?.birth_day.toString()}`}>
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.birth_day.toString())}>
+                  <TableCell style={{ cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => copyToClipboard(student?.birth_day.toString())}>
                     <p className={Styles.textOver}> {student?.birth_day.toString()}</p>
                   </TableCell>
                 </Tooltip>
                 <Tooltip title={`Copy: ${student?.email}`}>
-                  <TableCell style={{ cursor: 'pointer' }} onClick={() => copyToClipboard(student?.email)}>
+                  <TableCell style={{ cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => copyToClipboard(student?.email)}>
                     <p className={Styles.textOver}>{student?.email}</p>
                   </TableCell>
                 </Tooltip>
@@ -178,12 +178,14 @@ export default function BasicTable({ course }: { course: Course }) {
                       disabled={student?.status > 0}
                       color="success"
                       variant="outlined"
+                      style={{ whiteSpace: 'nowrap' }}
                       startIcon={<BsCheck2Circle />}
                     >
                       Xác nhận
                     </Button>
                   ) : (
                     <Button
+                      style={{ whiteSpace: 'nowrap' }}
                       onClick={() => onChangeStatus(student, 0)}
                       disabled={student?.status == 0}
                       color="warning"

@@ -80,8 +80,8 @@ const Admin: NextPage = (): JSX.Element => {
           sx={{ height: 500, flexGrow: 1, overflowY: 'auto' }}
         >
           <TreeItem nodeId="0_danhsach" label="Tổng quan">
-            <TreeItem nodeId="2_cho" label="Quản lý khóa học" onClick={() => setTab(2)} />
-            <TreeItem nodeId="1_khoahoc" label="Tạo khóa học" onClick={() => setTab(1)} />
+            <TreeItem className={Styles.TreeItem} nodeId="2_cho" label="Quản lý khóa học" onClick={() => setTab(2)} />
+            <TreeItem className={Styles.TreeItem} nodeId="1_khoahoc" label="Tạo khóa học" onClick={() => setTab(1)} />
           </TreeItem>
           {listLevel?.map((level) => (
             <TreeItem key={level} nodeId={level} label={`Lớp ${level}`}>
@@ -93,6 +93,7 @@ const Admin: NextPage = (): JSX.Element => {
                       key={classItem?.class_code + classItem?.name}
                       nodeId={`${level + classItem?.class_code}`}
                       label={classItem?.class_code}
+                      className={Styles.TreeItem}
                       onClick={() => onSetClassCode(classItem)}
                     />
                   )

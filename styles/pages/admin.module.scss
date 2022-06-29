@@ -2,6 +2,7 @@
   display: flex;
 }
 .navTree {
+  min-width: 250px;
   max-width: 250px;
   height: 100vh;
   padding: 50px 20px;
@@ -9,6 +10,8 @@
 }
 .bodyView {
   flex: 1;
+  overflow: scroll;
+  scroll-behavior: smooth;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -32,4 +35,14 @@
   font-weight: 600;
   line-height: normal;
   text-transform: uppercase;
+}
+.TreeItem {
+  div {
+    line-height: 2rem !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
