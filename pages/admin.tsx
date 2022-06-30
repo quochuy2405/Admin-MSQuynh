@@ -70,7 +70,7 @@ const Admin: NextPage = (): JSX.Element => {
   }
   return (
     <>
-      <Metadata title="Trang chủ - Learning Code" description="Trang chủ - Learning Code" />
+      <Metadata title="Quản trị MS.Quynh" description="Quản trị MS.Quynh" />
       <div className={Styles.admin}>
         <TreeView
           className={Styles.navTree}
@@ -83,14 +83,14 @@ const Admin: NextPage = (): JSX.Element => {
             <TreeItem className={Styles.TreeItem} nodeId="2_cho" label="Quản lý khóa học" onClick={() => setTab(2)} />
             <TreeItem className={Styles.TreeItem} nodeId="1_khoahoc" label="Tạo khóa học" onClick={() => setTab(1)} />
           </TreeItem>
-          {listLevel?.map((level) => (
-            <TreeItem key={level} nodeId={level} label={`Lớp ${level}`}>
+          {listLevel?.map((level, index) => (
+            <TreeItem key={level + index} nodeId={level} label={`Lớp ${level}`}>
               {listClass?.map(
-                (classItem) =>
+                (classItem, index) =>
                   classItem &&
                   level == classItem?.level.toString() && (
                     <TreeItem
-                      key={classItem?.class_code + classItem?.name}
+                      key={classItem?.class_code + classItem?.name + index}
                       nodeId={`${level + classItem?.class_code}`}
                       label={classItem?.class_code}
                       className={Styles.TreeItem}

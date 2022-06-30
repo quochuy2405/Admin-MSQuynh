@@ -96,7 +96,6 @@ const getStudentsByClassCode = async (classCode: string) => {
       const studentSnapshot = await getDocs(courses)
       const studentList = studentSnapshot.docs.map((doc) => doc.data())
       const list: Array<Student> = studentList.reduce((list: Array<Student>, itemCurrent) => {
-        console.log()
         return [...list, itemCurrent]
       }, [])
       return list
@@ -145,12 +144,22 @@ const updateStatusRegisterById = async (student: Student, value: number) => {
       where('class_code', '==', student.class_code),
       where('name', '==', student.name)
     )
+    const queryClass = query(collection(db, 'courses'), where('class_code', '==', student.class_code))
     const studentOld = await getDocs(queryCheckUser)
     if (studentOld.docs[0].id) {
       const studentRef = doc(db, 'students', `${studentOld.docs[0].id}`)
       await updateDoc(studentRef, {
         status: value
       })
+      const classOld = await getDocs(queryClass)
+      if (classOld.docs[0].id) {
+        const classRef = doc(db, 'courses', `${classOld.docs[0].id}`)
+        const number = value ? 1 : -1
+        const vol = classOld.docs[0].data()?.current_vol + number
+        await updateDoc(classRef, {
+          current_vol: vol > 0 ? vol : 0
+        })
+      }
       return true
     }
     return false

@@ -46,9 +46,9 @@ export default function BasicTable({ course }: { course: Course }) {
   }
   // get Students By ClassCode
   useEffect(() => {
+    setStudents([])
     const fetch = async () => {
       const listStudent = await getStudentsByClassCode(course?.class_code)
-
       setStudents(listStudent)
     }
     fetch()

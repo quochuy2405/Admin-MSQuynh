@@ -55,7 +55,7 @@ const Home: NextPage = (): JSX.Element => {
   }
   return (
     <>
-      <Metadata title="Trang chủ - Learning Code" description="Trang chủ - Learning Code" />
+      <Metadata title="Đăng nhập MS.Quynh" description="Đăng nhập MS.Quynh" />
       <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
           Lỗi đăng nhập
